@@ -1,12 +1,28 @@
 package com.udacity.asteroidradar
 
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
+@BindingAdapter("name")
+fun bindAsteroidsName(textView: TextView, item:Asteroid){
+    textView.text = item.codename
+}
+
+@BindingAdapter("magnitude")
+fun bindAsteroidsMagnitude(textView: TextView, item:Asteroid){
+    textView.text = item.absoluteMagnitude.toString()
+}
+@BindingAdapter("showProgress")
+fun bindProgressBar(progressBar : ProgressBar, status:Boolean){
+  progressBar.visibility = if (status)  View.VISIBLE else  View.GONE
+}
+
 @BindingAdapter("statusIcon")
-fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
-    if (isHazardous) {
+fun bindAsteroidStatusImage(imageView: ImageView, item: Asteroid) {
+    if (item.isPotentiallyHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)

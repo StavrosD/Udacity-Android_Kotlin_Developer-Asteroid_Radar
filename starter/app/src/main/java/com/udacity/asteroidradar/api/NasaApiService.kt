@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.ImageOfTheDay
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -15,10 +16,6 @@ import java.util.concurrent.TimeUnit
 
 
 interface ApiService {
-    @GET("neo/rest/v1/browse")
-    suspend fun browseAsteroids(@Query("api_key") type: String = Constants.API_KEY):
-            Response<String>
-
     @GET("neo/rest/v1/feed")
     suspend fun getAsteroids(
         @Query("start_date") start_date: String = DateUtils().today(),
@@ -27,9 +24,10 @@ interface ApiService {
             Response<String>
 
     @GET("planetary/apod")
-    suspend fun getPictureOfTheDay(
-        @Query("api_key") api_key: String = Constants.API_KEY):
-            Response<String>
+    suspend fun getImageOfTheDay(
+        @Query("api_key") api_key: String = Constants.API_KEY,
+        @Query("thumbs") thumbs: String = "True"):  // Return a thumbnail if the APOD is a video
+            Response<ImageOfTheDay>
 }
 
 object NasaApi{

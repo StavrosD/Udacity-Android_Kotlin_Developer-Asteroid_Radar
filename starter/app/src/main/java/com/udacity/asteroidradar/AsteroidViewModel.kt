@@ -1,11 +1,8 @@
 package com.udacity.asteroidradar
 
 import android.app.Application
-import android.opengl.Visibility
-import android.view.View
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AsteroidViewModel(application: Application) : AndroidViewModel(application){
 
@@ -13,6 +10,7 @@ class AsteroidViewModel(application: Application) : AndroidViewModel(application
 
     private val asteroidsRepository = AsteroidsRepository(database)
     val asteroids = asteroidsRepository.asteroids
+    val imageOfTheDay = asteroidsRepository.imageOfTheDay
 
     private val _navigateToAsteroidDetails = MutableLiveData<Asteroid?>()
     val navigateToAsteroidDetails
@@ -32,20 +30,26 @@ class AsteroidViewModel(application: Application) : AndroidViewModel(application
     }
 
     init {
-       refresh()
+        refreshAsteroids()
+        refreshImageOfTheDay()
     }
 
-    fun refresh(){
+    fun refreshAsteroids(){
         viewModelScope.launch {
             _gettingAsteroids = true
-            showProgressBar.value = _gettingAsteroids && _gettingImageURL
-            Timber.e("show progress bar")
+            showProgressBar.value = _gettingAsteroids || _gettingImageURL
             asteroidsRepository.refreshAsteroids()
             _gettingAsteroids = false
-            _gettingAsteroids = true
-            showProgressBar.value = _gettingAsteroids && _gettingImageURL
-            Timber.e("hide progress bar")
-
+            showProgressBar.value = _gettingAsteroids || _gettingImageURL
+        }
+    }
+    fun refreshImageOfTheDay(){
+        viewModelScope.launch {
+            _gettingImageURL = true
+            showProgressBar.value = _gettingAsteroids || _gettingImageURL
+            asteroidsRepository.refreshImageOfTheDay()
+            _gettingImageURL = false
+            showProgressBar.value = _gettingAsteroids || _gettingImageURL
         }
     }
 

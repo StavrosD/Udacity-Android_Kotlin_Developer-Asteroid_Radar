@@ -4,15 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.databinding.AsteroidItemViewBinding
-import androidx.recyclerview.widget.ListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.lang.ClassCastException
 
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
@@ -46,12 +44,9 @@ class AsteroidsAdapter(private val clickListener: AsteroidListener) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is AsteroidViewHolder -> {
-                Timber.e("is AsteroidViewHolder")
                 val asteroidItem = getItem(position) as DataItem.AsteroidItem
                 holder.bind(asteroidItem, clickListener)
-                Timber.e("is AsteroidViewHolder / when holder")
             }
-            else -> Timber.e("else / when holder")
         }
     }
 
@@ -62,11 +57,6 @@ class AsteroidsAdapter(private val clickListener: AsteroidListener) :
         }
     }
 
-    override fun getItemCount(): Int {
-        val itemCount = super.getItemCount()
-        Timber.e("Asteroids to render in recyclerview:${itemCount-1}") // remove one -> header
-        return itemCount
-    }
     class AsteroidViewHolder private constructor(private val binding: AsteroidItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DataItem.AsteroidItem, clickListener: AsteroidListener) {

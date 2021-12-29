@@ -19,7 +19,6 @@ data class Asteroid (
     ) : Parcelable
 
 
-
 fun List<Asteroid>.asDatabaseModel(): Array<DatabaseAsteroid> {
     return map {
         DatabaseAsteroid(
